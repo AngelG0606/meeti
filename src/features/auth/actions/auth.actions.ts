@@ -13,10 +13,6 @@ export async function signUpAction(formData : SignUp) {
         }
     }
 
-    await authService.register(data.data)
-
-    return {
-        error : '',
-        success : 'Cuenta Creada Correctamente, revisa tu email para confirmar tu cuenta'
-    }
+    const response = await authService.register(data.data)
+    return response
 } 
