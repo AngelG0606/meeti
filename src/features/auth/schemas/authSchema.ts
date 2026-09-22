@@ -17,4 +17,11 @@ export const SignUpSchema = AuthSchema.pick({
     path : ["password_confirmation"]
 })
 
+export const SignInSchema = AuthSchema.pick({
+    email : true
+}).extend({
+    password : z.string().trim().min(1, "No puede ir vacío")
+})
+
 export type SignUp = z.infer<typeof SignUpSchema>
+export type SignIn = z.infer<typeof SignInSchema>
