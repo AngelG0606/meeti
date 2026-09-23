@@ -26,8 +26,9 @@ class AuthService {
           name,
           email,
           password,
-          callbackURL: "http://localhost:3000/auth/login",
+          callbackURL: "/dashboard",
         },
+        headers : await headers()
       });
 
       return {

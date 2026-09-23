@@ -7,9 +7,7 @@ import { SignIn, SignInSchema } from "../schemas/authSchema"
 import FormError from "@/src/shared/components/forms/FormError"
 import { signInAction } from "../actions/auth.actions"
 import toast from "react-hot-toast"
-
-
-
+import { redirect } from "next/navigation"
 
 export default function LoginForm() {
 
@@ -17,6 +15,7 @@ export default function LoginForm() {
         resolver : zodResolver(SignInSchema),
         mode : 'all'
     })
+
 
     const onSubmit = async (formData : SignIn) => {
         const {error, success} = await signInAction(formData)
@@ -27,6 +26,7 @@ export default function LoginForm() {
 
         if(success) {
             toast.success(success)
+            redirect('/dashboard')
         }
     }
 
