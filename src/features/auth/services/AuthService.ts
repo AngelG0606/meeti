@@ -1,5 +1,10 @@
 import { auth } from "@/src/lib/auth";
-import { SignIn, SignUp } from "../schemas/authSchema";
+import {
+  ForgotPassword,
+  NewPasswordInput,
+  SignIn,
+  SignUp,
+} from "../schemas/authSchema";
 import { authRepository, IAuthRepository } from "./AuthRepository";
 import { headers } from "next/headers";
 import { APIError } from "better-auth";
@@ -28,7 +33,7 @@ class AuthService {
           password,
           callbackURL: "/dashboard",
         },
-        headers : await headers()
+        headers: await headers(),
       });
 
       return {
@@ -85,7 +90,8 @@ class AuthService {
 
         const errorMessages = messages[error.statusCode];
         return {
-          error: errorMessages || error.message || "Hubo un error al iniciar sesión",
+          error:
+            errorMessages || error.message || "Hubo un error al iniciar sesión",
           success: "",
         };
       }
@@ -102,6 +108,68 @@ class AuthService {
         success: "",
       };
     }
+  }
+
+  async requestPasswordReset(data: ForgotPassword) {
+    const { email } = data;
+
+    const user = await this.authRepository.userExists(email);
+    if (!user) {
+      return {
+        error: "No hay ningún usuario registrado con ese E-mail",
+        success: "",
+      };
+    }
+
+    try {
+      auth.api.requestPasswordReset({
+        body: {
+          email,
+        },
+      });
+
+      return {
+        error: "",
+        success: "Hemos envíado las instrucciones a tu Correo electronico",
+      };
+    } catch (error) {
+      console.log(error);
+    }
+
+    return {
+      error: "",
+      success: "",
+    };
+  }
+
+  async confirmPasswordReset(data: NewPasswordInput, token: string) {
+    const { new_password } = data;
+
+    try {
+      await auth.api.resetPassword({
+        body : {
+          newPassword : new_password,
+          token
+        }
+      });
+
+      return {
+        error: "",
+        success: "Contraseña actualizada correctamente",
+      }
+    } catch (error) {
+      if (error instanceof APIError) {
+        return {
+          error : 'Hubo un error',
+          success : ''
+        }
+      }
+    }
+
+    return {
+      error: "",
+      success: "",
+    };
   }
 }
 

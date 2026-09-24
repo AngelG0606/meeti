@@ -4,6 +4,7 @@ import { db } from '../db'
 import * as schema from '../db/schema'
 import { nextCookies } from 'better-auth/next-js'
 import { AuthEmailService } from '../emails/services/AuthEmailService'
+import { EmailService } from '../emails/services/EmailService'
 
 export const auth = betterAuth({
     database : drizzleAdapter(db, {
@@ -14,6 +15,14 @@ export const auth = betterAuth({
     emailAndPassword : {
         enabled : true,
         requireEmailVerification : true,
+        sendResetPassword : async ({user, url }) => {
+            const data = {
+                name : user.name,
+                email : user.email,
+                url
+            }
+            await AuthEmailService.sendRequestPasswordEmail(data)
+        }
     },
     emailVerification : {
         sendOnSignIn : true,
@@ -26,6 +35,7 @@ export const auth = betterAuth({
             }
             await AuthEmailService.sendVerificationEmail(data)
         },
+        
         
     },
    plugins : [nextCookies()]

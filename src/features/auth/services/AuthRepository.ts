@@ -4,6 +4,7 @@ import { User } from "../types/auth.types"
 
 export interface IAuthRepository {
     userExists : (email : string) => Promise<User | undefined>
+    
 }
 
 class AuthRepository implements IAuthRepository {
