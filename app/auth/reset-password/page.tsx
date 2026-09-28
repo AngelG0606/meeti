@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import SetPasswordForm from "@/src/features/auth/components/SetPasswordForm";
 import Heading from "@/src/shared/components/typography/Heading";
 import { generatePageTitle } from "@/src/shared/utils/metadata";
@@ -8,13 +9,14 @@ export const metadata: Metadata = {
     title: generatePageTitle('Definir Nueva Contraseña')
 }
 
-
 export default function ResetPasswordPage() {
     return (
         <>
             <Heading>Definir Nueva Contraseña</Heading>
 
-            <SetPasswordForm />
+            <Suspense fallback={<div>Cargando...</div>}>
+                <SetPasswordForm />
+            </Suspense>
 
             <nav className="flex justify-between items-center my-10">
                 <Link href={'/auth/create-account'} className="text-sky-600 font-semibold  hover:underline cursor-pointer">
@@ -29,3 +31,4 @@ export default function ResetPasswordPage() {
         </>
     )
 }
+
