@@ -1,3 +1,6 @@
+import { User } from "../../auth/types/auth.types";
+import { CommunityPolicy } from "../policies/CommunityPolicy";
+import { MembershipPolicy } from "../policies/MembershipPolicy";
 import { CommunityInput } from "../types";
 import {
   communityRepository,
@@ -17,7 +20,33 @@ export class CommunityService {
           success: "Comunidad Creada Correctamente",
         };
       }
-    } catch (error) {}
+    } catch (error) {
+    }
+  }
+
+  async getUserCommunities(user : User) {
+    const communities = await this.communityRepository.findByUser(user.id)
+
+    const enriched = await Promise.all(communities.map( async (community) => {
+      const isMember = CommunityPolicy.isMember(community, user)
+      const isAdmin = CommunityPolicy.isAdmin(community, user)
+      return {
+        data : community,
+        context : {
+          isMember,
+          isAdmin
+        },
+        permissions : {
+          canEdit : CommunityPolicy.canEdit(community, user),
+          canDelete : CommunityPolicy.canDelete(community, user),
+          canJoin : MembershipPolicy.canJoin(user, community, isMember),
+          canLeave : MembershipPolicy.canLeave(user, community, isAdmin),
+          canViewMembers : CommunityPolicy.canViewMembers(community, user)
+        }
+      }
+    }))
+    
+    return enriched
   }
 }
 

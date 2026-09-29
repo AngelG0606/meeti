@@ -10,7 +10,7 @@ export default function UploadImage() {
 
     const [uploadedImage, setUploadedImage] = useState('')
 
-    const { formState : { errors } } = useFormContext<CommunityInput>()
+    const { formState : { errors }, setValue } = useFormContext<CommunityInput>()
 
 
     return (
@@ -20,6 +20,9 @@ export default function UploadImage() {
                 onClientUploadComplete={(res) => {
                     toast.success('Imagen Subida')
                     setUploadedImage(res[0].url)
+                    setValue('image', res[0].url, {
+                        shouldValidate : true
+                    })
                 }}
                 appearance={{
                     button: 'bg-orange-600 font-semibold w-full h-auto py-2 rounded-none',
