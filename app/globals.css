@@ -1,7 +1,6 @@
 @import "tailwindcss";
-
-
+@import "@uploadthing/react/styles.css";
 
 @utility bg-hero {
-  background-image : url('/hero.jpg')
+  background-image : url('/hero.jpg');
 }

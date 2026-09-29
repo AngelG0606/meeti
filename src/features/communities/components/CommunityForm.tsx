@@ -3,12 +3,10 @@ import { FormError, FormInput, FormLabel } from "@/src/shared/components/forms";
 import FormTextArea from "@/src/shared/components/forms/FormTextArea";
 import { useFormContext } from "react-hook-form";
 import { CommunityInput } from "../types";
-import { UploadDropzone } from "@/src/shared/utils/uoloadthing";
-
+import UploadImage from "@/src/shared/components/upload/UploadImage";
 
 export default function CommunityForm() {
 
-  const initialValues = {name : '', description : ''}
   const {register, formState : { errors } } = useFormContext<CommunityInput>()
 
   return (
@@ -25,7 +23,9 @@ export default function CommunityForm() {
           <FormError>{errors.name.message}</FormError>
         )}
 
-        <UploadDropzone />
+        <FormLabel>Imagen Comunidad</FormLabel>
+        <UploadImage />
+        
     
         <FormLabel htmlFor="description">Nombre Comunidad</FormLabel>
         <FormTextArea 
@@ -33,6 +33,8 @@ export default function CommunityForm() {
             placeholder="Descripcion Comunidad"
             {...register('description')}
         />
+
+        
 
         {errors.description && (
           <FormError>{errors.description.message}</FormError>
