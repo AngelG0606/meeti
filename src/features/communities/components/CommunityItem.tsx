@@ -33,7 +33,7 @@ export default function CommunityItem({ community } : Props) {
       <div className="flex shrink-0 items-center gap-x-6">
         
             {community.context.isAdmin && (
-                <CommunityDropdownMenu community={community} />
+                <CommunityDropdownMenu community={community.data} />
             )}
             
         
