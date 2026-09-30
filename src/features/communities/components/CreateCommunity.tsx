@@ -14,7 +14,11 @@ export default function CreateCommunity() {
 
   const methods = useForm<CommunityInput>({
     resolver : zodResolver(CommunitySchema),
-    mode : 'all'
+    mode : 'all',
+    defaultValues : {
+      name : '',
+      description : ''
+    }
   })
 
   const onSubmit = async (formData : CommunityInput) => {

@@ -14,9 +14,8 @@ export const metadata : Metadata = {
 
 export default async function CommunityCreatePage() {
 
-    const { isAuth} = await requireAuth()
-
-    if(!isAuth) redirect('/auth/login')
+    const { session } = await requireAuth()
+    if(!session) redirect('/auth/login')
 
     
 

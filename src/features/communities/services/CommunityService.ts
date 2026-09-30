@@ -56,7 +56,39 @@ export class CommunityService {
     return community
   }
 
-  
+  async getCommunityDetails(communityId : string, user : User) {
+    const community = await this.getCommunity(communityId)
+    const isMember = false
+    const isAdmin = CommunityPolicy.isAdmin(community,user )
+
+    return {
+        data : community,
+        context : {
+          isMember,
+          isAdmin 
+        },
+        permissions : {
+          canEdit : CommunityPolicy.canEdit(community, user),
+          canDelete : CommunityPolicy.canDelete(community, user),
+          canJoin : MembershipPolicy.canJoin(user, community, isMember),
+          canLeave : MembershipPolicy.canLeave(user, community, isMember),
+          canViewMembers : CommunityPolicy.canViewMembers(community, user)
+        }
+      }
+
+  }
+
+  async updateCommunity(communityId : string, data : CommunityInput, user : User) {
+    const community = await this.getCommunity(communityId)
+    if(!CommunityPolicy.canEdit(community, user)) {
+      throw new Error('No tienes permisos para actualizar esa comunidad')
+    }
+
+    
+    await this.communityRepository.update(data, communityId)
+
+
+  }
 
 }
 

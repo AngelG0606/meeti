@@ -8,7 +8,8 @@ import { eq } from "drizzle-orm"
 export interface ICommunityRepository {
     create : (data : CommunityInput, userId : string) => Promise<SelectCommunity>
     findByUser(userId : string) : Promise<SelectCommunity[]>
-    findById(communityId : string) : Promise<SelectCommunity>
+    findById(communityId : string) : Promise<SelectCommunity | undefined>
+    update(data : CommunityInput, communityId : string) : Promise<void>
 }
 
 export class CommunityRepository implements ICommunityRepository {
@@ -30,14 +31,20 @@ export class CommunityRepository implements ICommunityRepository {
         return result
     }
 
-    async findById(communityId: string): Promise<SelectCommunity> {
+    async findById(communityId: string): Promise<SelectCommunity | undefined> {
         const [result] = await db
                             .select()
                             .from(community)
                             .where(
-            eq(community.id, communityId)
-        ).limit(1)
+                                eq(community.id, communityId)
+                             ).limit(1)
         return result
+    }
+
+    async update(data: CommunityInput, communityId: string): Promise<void> {
+        await db.update(community).set(data).where(
+            eq(community.id, communityId)
+        )
     }
 }
 

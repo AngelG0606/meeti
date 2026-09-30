@@ -10,9 +10,10 @@ export default function UploadImage() {
 
     const [uploadedImage, setUploadedImage] = useState('')
 
-    const { formState : { errors }, setValue } = useFormContext<CommunityInput>()
+    const { formState : { errors }, setValue, getValues } = useFormContext<CommunityInput>()
 
-
+    const currentImage = getValues('image') ? getValues('image') : null
+    
     return (
         <>
             <UploadDropzone
@@ -41,6 +42,19 @@ export default function UploadImage() {
                 <FormError>{errors.image.message}</FormError>
             )}
 
+            {currentImage && !uploadedImage && (
+                <>
+                    <p className="text-lg font-bold">Imagen Actual</p>
+
+                    <Image
+                        src={uploadedImage}
+                        alt="Imagen publicada"
+                        height={300}
+                        width={300}
+                    />
+                </>
+            )}
+
             {uploadedImage && (
                 <>
                     <p className="text-lg font-bold">Imagen Nueva</p>
@@ -52,9 +66,9 @@ export default function UploadImage() {
                         width={300}
                     />
                 </>
-
-
             )}
+
+            
         </>
     )
 }
